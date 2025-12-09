@@ -10,6 +10,20 @@ def variables():
   T = 300     #domain time(s)
   dx = 0.2    #spacial resolution (m)
   dt = 10     #timestep (s)
+
+  print("enter model parameters (or press enter to use default results):")
+
+  # helper to read input with fallback default
+  def get_value(prompt, default):
+    value = input(f"{prompt} [{default}]: ").strip()
+    return float(value) if value else default
+
+  L = get_value("Domain length L (m)", L_default)
+  U = get_value("Velocity U (m/s)", U_default)
+  T = get_value("Simulation time T (s)", T_default)
+  dx = get_value("Spatial resolution dx (m)", dx_default)
+  dt = get_value("Timestep dt (s)", dt_default)
+  
   return(L, U, T, dx, dt)
 L, U, T, dx, dt = variables()
 
@@ -49,7 +63,7 @@ B[:] = 1 - A[:]
 df = pd.read_csv("initial_conditions.csv", encoding="latin1")
 x_data = df.iloc[:, 0].to_numpy(float)
 c_data = df.iloc[:, 1].to_numpy(float)
-theta_old = np.interp(x, x_data, c_data, left=c_data[0], right=c_data[-1])
+theta_old = np.interp(x, x_data, c_data, left=c_data[0], right=c_data[-1]) 
 
 
 

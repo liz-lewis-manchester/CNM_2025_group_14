@@ -46,7 +46,7 @@ A[:] = u_array * dt/dx
 B[:] = 1 - A[:]
 
 #Read in initial condictions 
-df = pd.read_csv("initial_conditions.csv", encoding="latin1")
+df = pd.read_csv("data/initial_conditions.csv", encoding="latin1")
 x_data = df.iloc[:, 0].to_numpy(float)
 c_data = df.iloc[:, 1].to_numpy(float)
 theta_old = np.interp(x, x_data, c_data, left=c_data[0], right=c_data[-1])

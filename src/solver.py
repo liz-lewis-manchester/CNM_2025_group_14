@@ -1,37 +1,86 @@
-# Copy initial state for the 'new' array for plotting
-theta_new = np.copy(theta_old)
-theta_initial = np.copy(theta_old)
+import numpy as np
 
-# Print to keep user informed
-print("Starting implicit advection simulation")
-print(f"Total time time steps: {Nt}")
+  # Make x and t grids
+def make_grid(L, T, dx, dt):
+  
+    # Number of spatial and temporal points (includes both endpoints)
+    nx = int(round(L / dx)) + 1
+    nt = int(round(T / dt)) + 1
 
-# Check CFL condition
-CFL = np.max(np.abs(u_array) * dt/dx)
-print(f"CFL number: {CFL:.3f}")
+    # Uniform grids in space and time
+    x = np.linspace(0.0, float(L), nx)
+    t = np.linspace(0.0, float(T), nt)
+    return x, t
 
-current_time = 0.0
 
-# Time iteration loop (j=1 to Nt)
-for j in range(1, Nt + 1):
-    current_time = j * dt
+# Courant number
+def courant(u, dt, dx):
+    u_arr = np.asarray(u, dtype=float) # Convert u to a NumPy array to allow both scalar and array input
+    c = u_arr * float(dt) / float(dx) # Courant number
+    return float(np.max(c))
 
-    # Assume fixed boundary conditions so:
-    theta_new[0] = theta_initial[0]
 
-    # Calculate right hand side vector F
-    F[:] = (1.0 / dt) * theta_old[1:]
+# a and b arrays
+def _coefficients(u, dt, dx, nx):
+    if np.isscalar(u):
+        u_x = np.full(nx, float(u), dtype=float)
+    else:
+        u_x = np.asarray(u, dtype=float)
+        if u_x.shape[0] != nx:
+            raise ValueError("u(x) must have length nx")
 
-    # Solve the linear system for I = 1 to Nx
-    for I in range(1, Nx):
-        k = I - 1 
+    a = 1.0 / float(dt) + u_x / float(dx)
+    b = u_x / float(dx)
+    return a, b
 
-        # Check if division by zero (shouldn't be if U != 0)
-        if A[k] == 0
-            theta_new[I] = theta_old[I]
-        else:
-            theta_new[I] = (1.0 / A[k]) * (F[k] - B[k] * theta_new[I-1])
-        
-    theta_old[:] = theta_new[:]
 
-print(f"Simulation complete at t = {current_time:.1f} s")
+# One time step solve using forward substitution (lower triangular)
+def forward_substitution(theta_old, a, b, theta_left, dt):
+    nx = theta_old.shape[0]
+    theta_new = np.zeros(nx, dtype=float)
+
+    theta_new[0] = float(theta_left)
+    f = theta_old / float(dt)
+
+    for i in range(1, nx):
+        theta_new[i] = (f[i] + b[i] * theta_new[i - 1]) / a[i]
+
+    return theta_new
+
+
+# Solve the 1D advection equation using backward Euler in time 
+# and backward difference in space
+def solve(theta0, theta_x0, x, t, u, dx, dt, cfl_warn=1.0):
+    x = np.asarray(x, dtype=float)
+    t = np.asarray(t, dtype=float)
+    theta0 = np.asarray(theta0, dtype=float)
+    theta_x0 = np.asarray(theta_x0, dtype=float)
+
+    nx = x.size
+    nt = t.size
+
+    if theta0.size != nx:
+        raise ValueError("theta0 must have length nx")
+    if theta_x0.size != nt:
+        raise ValueError("theta_x0 must have length nt")
+
+    c = courant(u, dt, dx) # Compuete the Courant number and warn if large
+    if c > float(cfl_warn):
+        print(f"warning: max(u*dt/dx) = {c:.3f} > {cfl_warn} (accuracy may drop)")
+
+    a, b = _coefficients(u, dt, dx, nx)
+
+    Theta = np.zeros((nt, nx), dtype=float) # Set initial condition
+    Theta[0, :] = theta0
+
+    theta_old = theta0.copy()
+
+    # Time-stepping loop
+    for n in range(1, nt):
+        theta_left = theta_x0[n]
+        theta_new = forward_substitution(theta_old, a, b, theta_left, dt) # Solve for new time step
+
+        Theta[n, :] = theta_new
+        theta_old = theta_new
+
+    return Theta

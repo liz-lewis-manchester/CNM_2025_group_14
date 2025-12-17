@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+from .testcases_1_3 import ic_spike_at_source, bc_constant
 
 # Test Case 4 - exponentially decaying initial concentration of pollutant
 

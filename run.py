@@ -6,8 +6,8 @@ import numpy as np
 from src import variables
 from src.solver import make_grid, solve
 from src.testcases_1_3 import (
-    test_case_1,
-    test_case_2,
+    case_1,
+    case_2,
 )
 from src.testcases_4_5 import (
     case_4,
@@ -47,7 +47,7 @@ def main():
 
     #retrieves conditions from test case 1 and solves for theta
     title = "Test Case 1: Concentration vs distance (baseline case)"
-    theta0, theta_x0, u_out = test_case_1(x, t, theta_source, u)
+    theta0, theta_x0, u_out = case_1(x, t, theta_source, u)
     Theta = solve(theta0, theta_x0, x, t, u_out, dx, dt)
 
     #boundary condition vs time plot
@@ -72,7 +72,7 @@ def main():
     #read initial conditions, apply same boundary conditions and solve for theta
     title = "Test Case 2: Concentration vs distance (initial condition from CSV)"
     csv_path = "data/initial_conditions.csv"
-    theta0, theta_x0, u_out = test_case_2(x, t, theta_source, u, csv_path)
+    theta0, theta_x0, u_out = case_2(x, t, theta_source, u, csv_path)
     Theta = solve(theta0, theta_x0, x, t, u_out, dx, dt)
 
     #plot concentration vs distance at final time
@@ -98,7 +98,7 @@ def main():
 
     profiles_u, labels_u = [], []
     for u_val in u_values:
-        theta0, theta_x0, u_out = test_case_1(x_ref, t_ref, theta_source, u_val)
+        theta0, theta_x0, u_out = case_1(x_ref, t_ref, theta_source, u_val)
         Theta_u = solve(theta0, theta_x0, x_ref, t_ref, u_out, dx, dt)
         profiles_u.append(Theta_u[-1, :])
         labels_u.append(_fmt_u(u_val))
@@ -122,7 +122,7 @@ def main():
     profiles_dx, labels_dx = [], []
     for dx_val in dx_values:
         x_s, t_s = make_grid(L, T, dx_val, dt)
-        theta0, theta_x0, u_out = test_case_1(x_s, t_s, theta_source, u)
+        theta0, theta_x0, u_out = case_1(x_s, t_s, theta_source, u)
         Theta_s = solve(theta0, theta_x0, x_s, t_s, u_out, dx_val, dt)
         profiles_dx.append(np.interp(x_ref, x_s, Theta_s[-1, :]))
         labels_dx.append(_fmt_dx(dx_val))
@@ -146,7 +146,7 @@ def main():
     profiles_dt, labels_dt = [], []
     for dt_val in dt_values:
         x_s, t_s = make_grid(L, T, dx, dt_val)
-        theta0, theta_x0, u_out = test_case_1(x_s, t_s, theta_source, u)
+        theta0, theta_x0, u_out = case_1(x_s, t_s, theta_source, u)
         Theta_s = solve(theta0, theta_x0, x_s, t_s, u_out, dx, dt_val)
         profiles_dt.append(np.interp(x_ref, x_s, Theta_s[-1, :]))
         labels_dt.append(_fmt_dt(dt_val))

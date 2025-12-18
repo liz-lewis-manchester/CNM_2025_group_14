@@ -59,20 +59,3 @@ def case_2(x, t, theta_source, u, csv_path):
 
     # constant velocity
     return theta0, theta_x0, float(u)
-
-
-# TEST CASE 3: sensitivity study (u, dx, dt)
-
-# define the different parameter sets for the sensitivity analysis
-def case_3_sets(u, dx, dt):
-    u = float(u)
-    dx = float(dx)
-    dt = float(dt)
-
-    return [
-        {"label": "base",    "u": u,       "dx": dx,       "dt": dt},
-        {"label": "u_low",   "u": 0.5 * u, "dx": dx,       "dt": dt},
-        {"label": "u_high",  "u": 2.0 * u, "dx": dx,       "dt": dt},
-        {"label": "dx_half", "u": u,       "dx": 0.5 * dx, "dt": dt},
-        {"label": "dt_half", "u": u,       "dx": dx,       "dt": 0.5 * dt},
-    ]

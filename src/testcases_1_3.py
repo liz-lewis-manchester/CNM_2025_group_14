@@ -17,7 +17,7 @@ def bc_constant(t, theta_source):
 
 
 # set up everything needed for test case 1
-def test_case_1(x, t, theta_source, u):
+def case_1(x, t, theta_source, u):
     # initial condition
     theta0 = ic_spike_at_source(x, theta_source)
 
@@ -50,7 +50,7 @@ def ic_from_csv(x, csv_path):
 
 
 # set up everything needed for test case 2
-def test_case_2(x, t, theta_source, u, csv_path):
+def case_2(x, t, theta_source, u, csv_path):
     # initial condition from CSV
     theta0 = ic_from_csv(x, csv_path)
 
@@ -64,7 +64,7 @@ def test_case_2(x, t, theta_source, u, csv_path):
 # TEST CASE 3: sensitivity study (u, dx, dt)
 
 # define the different parameter sets for the sensitivity analysis
-def test_case_3_sets(u, dx, dt):
+def case_3_sets(u, dx, dt):
     u = float(u)
     dx = float(dx)
     dt = float(dt)

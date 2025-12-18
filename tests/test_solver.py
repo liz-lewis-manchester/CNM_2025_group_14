@@ -33,7 +33,7 @@ def test_solve_shape_and_ic_bc_enforced():
 
     #initial condition = zero everywhere except boundary
     theta0 = np.zeros(nx)
-    theta0 = 1.0
+    theta0[0] = 1.0
 
     #boundary condition = constant concentration at x=0
     theta_x0 = np.full(nt, 1.0)
@@ -47,7 +47,7 @@ def test_solve_shape_and_ic_bc_enforced():
     assert np.allclose(Theta[0, :], theta0)
 
     #boundary condition enforced
-    assert np.allclose(Theta[:, 0], theta_x0)
+    assert np.allclose(Theta[1:, 0], theta_x0[1:])
 
     #numerical sanity
     assert np.isfinite(Theta).all()

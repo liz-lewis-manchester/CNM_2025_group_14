@@ -14,7 +14,7 @@ def test_plot_profile_creates_file(tmp_path):
     """
     check that plot_profile runs without error and creates a non empty output file
     """
-    x = linspace(0, 1, 10)
+    x = np.linspace(0, 1, 10)
     theta = np.linspace(0, 1, 10)
 
     out = tmp_path / "profile.png"
@@ -45,7 +45,7 @@ def test_plot_time_series_creates_file(tmp_path):
         "test case 1: concentration vs time at x=0",
     )
     assert out.exists()
-    assert out.stats().st_size > 0
+    assert out.stat().st_size > 0
 
 
 def test_plot_multiple_profiles_creates_file(tmp_path):
@@ -70,4 +70,4 @@ def test_plot_multiple_profiles_creates_file(tmp_path):
     )
 
     assert out.exists()
-    assert out.stats().st_size > 0
+    assert out.stat().st_size > 0

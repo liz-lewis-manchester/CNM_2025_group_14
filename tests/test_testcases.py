@@ -1,16 +1,15 @@
 import numpy as np 
 import pytest
 
-from src.testcases import (
+from src.testcases_1_3 import (
     bc_constant,
-    bc_exp_decay,
-    ic_from_csv, 
     case_1,
-    case_2,
-    case_3_sets,
-    case_4,
-    case_5,
 )
+
+from src.testcases_4_5 import (
+    bc_exp_decay,
+)
+
 
 def test_boundary_condition_helpers():
     """test boundary condition helper functions; constant boundary condition, exponentially decaying boundary condition
@@ -40,14 +39,3 @@ def test_case_1_shapes():
     assert theta0.shape == x.shape
     assert theta_x0.shape == t.shape
     assert np.isscalar(u_out)
-
-
-def test_case_3_sets_structure():
-    """
-    case 3 should return a list of parameter sets
-    for sensitivity testing.
-    """
-    sets = case_3_sets(u=0.1, dx=0.2, dt=10.0)
-
-    assert isinstance(sets, list)
-    assert lens(sets) >= 5

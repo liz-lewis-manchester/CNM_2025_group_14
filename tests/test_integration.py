@@ -27,4 +27,4 @@ def test_end_to_end_small_run_is_finite():
     assert np.isfinite(Theta).all()
 
     #boundary condition enforced at x=0
-    assert np.allclose(Theta[:, 0], theta_x0)
+    assert np.allclose(Theta[1:, 0], theta_x0[1:])

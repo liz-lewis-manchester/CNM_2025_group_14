@@ -1,7 +1,7 @@
 import numpy as np 
 
 from src.solver import make_grid, solve
-from src.testcases import case_1 
+from src.testcases_1_3 import case_1 
 
 def test_end_to_end_small_run_is_finite():
     """
